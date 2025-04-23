@@ -6,6 +6,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
 
 # class ArticleViewSet(viewsets.ModelViewSet):
 #     queryset = Article.objects.all()
@@ -33,6 +34,7 @@ class VerhalenDetail(APIView):
         return Response(serializer.data)
 
 class VerhalenListAdmin(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self,request):
         verhalen = Verhaal.objects.all()
         serializer = VerhaalSerializer(verhalen, many=True, context={'request': request})
