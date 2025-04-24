@@ -23,6 +23,7 @@ class Verhaal(models.Model):
     cover_image = models.ImageField(upload_to='verhalen_covers/')
     datum = models.DateField()
 
+
     def __str__(self):
         return self.titel
 
