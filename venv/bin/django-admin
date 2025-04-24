@@ -1,4 +1,4 @@
-#!/Users/viniciussousa/Desktop/MA/examen/Examen-verhaal-backend/venv/bin/python3
+#!/home/vinininja123/Examen-verhaal-backend/venv/bin/python3.10
 # -*- coding: utf-8 -*-
 import re
 import sys

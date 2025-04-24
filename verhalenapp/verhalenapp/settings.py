@@ -79,8 +79,12 @@ TEMPLATES = [
 WSGI_APPLICATION = 'verhalenapp.wsgi.application'
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Vite dev server
+    "http://localhost:5173",
+    "https://localhost:5173",
+    "https://vinininja123.pythonanywhere.com"
 ]
+
+CORS_ALLOW_CREDENTIALS = True
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
