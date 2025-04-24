@@ -10,6 +10,8 @@ from django.db import models
 
 class Categorie(models.Model):
     naam = models.CharField(max_length=200)
+    cover_image = models.ImageField(upload_to='categorie_covers/')
+    is_uitgelicht = models.BooleanField(default=False)
 
     def __str__(self):
         return self.naam
@@ -22,6 +24,7 @@ class Verhaal(models.Model):
     beschrijving = models.CharField(max_length=200)
     cover_image = models.ImageField(upload_to='verhalen_covers/')
     datum = models.DateField()
+    is_uitgelicht = models.BooleanField(default=False)
 
 
     def __str__(self):
