@@ -26,6 +26,7 @@ class Verhaal(models.Model):
     datum = models.DateField()
     is_uitgelicht = models.BooleanField(default=False)
     is_spotlighted = models.BooleanField(default=False)
+    is_downloadable = models.BooleanField(default=False)
 
 
     def __str__(self):
