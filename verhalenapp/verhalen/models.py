@@ -25,6 +25,7 @@ class Verhaal(models.Model):
     cover_image = models.ImageField(upload_to='verhalen_covers/', null=True, blank=True)
     datum = models.DateField()
     is_uitgelicht = models.BooleanField(default=False)
+    is_spotlighted = models.BooleanField(default=False)
 
 
     def __str__(self):
