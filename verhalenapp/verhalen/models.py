@@ -27,7 +27,7 @@ class Verhaal(models.Model):
     is_uitgelicht = models.BooleanField(default=False)
     is_spotlighted = models.BooleanField(default=False)
     is_downloadable = models.BooleanField(default=False)
-
+    pdf_file = models.FileField(upload_to='verhalen_pdfs/', null=True, blank=True)
 
     def __str__(self):
         return self.titel
