@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-1((!gqn@19++lc#ga_mcn@3#_a_z-qwa&k$6y+k4zz!$+9m36z
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['vinininja123.pythonanywhere.com',]
 
 
 # Application definition
@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework_simplejwt',
+    'corsheaders',
 
     'rest_framework',
     'verhalen',
@@ -49,6 +51,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -75,6 +78,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'verhalenapp.wsgi.application'
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "https://localhost:5173",
+    "https://vinininja123.pythonanywhere.com"
+]
+
+CORS_ALLOW_CREDENTIALS = True
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -139,7 +149,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+# Define the base directory for static files
+STATIC_URL = '/static/'
+
+# Define locations where Django will look for static files
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
+# Define the directory where collectstatic will collect files for production
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
