@@ -81,7 +81,10 @@ WSGI_APPLICATION = 'verhalenapp.wsgi.application'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "https://localhost:5173",
-    "https://vinininja123.pythonanywhere.com"
+    "http://localhost:3000",
+    "https://localhost:3000",
+    "https://vinininja123.pythonanywhere.com",
+    "https://viniciuseduardosousa.github.io"
 ]
 
 CORS_ALLOW_CREDENTIALS = True

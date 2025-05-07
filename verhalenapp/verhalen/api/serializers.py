@@ -8,7 +8,7 @@ class CategorieSerializer(serializers.ModelSerializer):
     cover_image = serializers.ImageField(required=False)
 
 class VerhaalSerializer(serializers.ModelSerializer):
-    categorie = CategorieSerializer(read_only=True)
+    categorie = serializers.PrimaryKeyRelatedField(queryset=Categorie.objects.all())
     class Meta:
         model = Verhaal
         fields = '__all__'
