@@ -65,6 +65,14 @@ class VerhalenDetailAdmin(APIView):
         verhaal = self.get_object(pk)
         serializer = VerhaalSerializer(verhaal, context={'request': request})
         return Response(serializer.data)
+    
+    def patch(self, request, pk):
+        verhaal = self.get_object(pk)
+        serializer = VerhaalSerializer(verhaal, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, pk):
         verhaal = self.get_object(pk)
@@ -114,6 +122,7 @@ class CategorieDetailAdmin(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 
     def delete(self, request, pk):
         categorie = self.get_object(pk)
