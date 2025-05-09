@@ -1,7 +1,7 @@
 import os
 from django.core.management.base import BaseCommand
 from django.conf import settings
-from verhalen.models import Verhaal  
+from verhalen.models import Categorie 
 
 class Command(BaseCommand):
     help = "Deletes unused images from verhalen_covers/ that are not referenced by Verhaal.cover_image"
@@ -16,8 +16,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         dry_run = options['dry_run']
 
-   
-        covers_dir = os.path.join(settings.MEDIA_ROOT, 'verhalen_covers')
+
+        covers_dir = os.path.join(settings.MEDIA_ROOT, 'categorie_covers')
 
         if not os.path.exists(covers_dir):
             self.stdout.write(self.style.ERROR("verhalen_covers directory does not exist in MEDIA_ROOT."))
@@ -31,17 +31,17 @@ class Command(BaseCommand):
                 relative_path = os.path.relpath(full_path, settings.MEDIA_ROOT)
                 all_files.add(relative_path)
 
- 
+
         used_files = set()
-        for obj in Verhaal.objects.all():  
-            if obj.cover_image:             
+        for obj in Categorie.objects.all():  
+            if obj.cover_image:              
                 used_files.add(obj.cover_image.name)
 
 
         unused_files = all_files - used_files
 
         if not unused_files:
-            self.stdout.write(self.style.SUCCESS("No unused images found in verhalen_covers/."))
+            self.stdout.write(self.style.SUCCESS("No unused images found in categorie_covers/."))
             return
 
         if dry_run:
@@ -58,4 +58,4 @@ class Command(BaseCommand):
                     os.remove(full_path)
                     self.stdout.write(f"Deleted: {rel_path}")
                     deleted_count += 1
-            self.stdout.write(self.style.SUCCESS(f"Deleted {deleted_count} unused image(s) from verhalen_covers/."))
+            self.stdout.write(self.style.SUCCESS(f"Deleted {deleted_count} unused image(s) from categorie_covers/."))
