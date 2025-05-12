@@ -14,12 +14,12 @@ class VerhaalSerializer(serializers.ModelSerializer):
         fields = '__all__'
     cover_image = serializers.ImageField(allow_null=True, required=False)
 
-    def update(self, instance, validated_data):
-        if 'cover_image' in validated_data:
-            if validated_data['cover_image'] is None:
-                instance.cover_image.delete(save=False)
-                instance.cover_image = None
-            else:
-                instance.cover_image = validated_data['cover_image']
-        instance.save()
-        return instance
+    # def update(self, instance, validated_data):
+    #     if 'cover_image' in validated_data:
+    #         if validated_data['cover_image'] is None:
+    #             instance.cover_image.delete(save=False)
+    #             instance.cover_image = None
+    #         else:
+    #             instance.cover_image = validated_data['cover_image']
+    #     instance.save()
+    #     return instance
