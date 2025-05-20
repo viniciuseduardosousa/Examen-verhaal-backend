@@ -24,7 +24,7 @@ class Verhaal(models.Model):
     tekst = models.TextField()
     categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE)
     is_onzichtbaar = models.BooleanField(default=False)
-    beschrijving = models.CharField(max_length=500)
+    beschrijving = models.CharField(max_length=500, null=True, blank=True)
     cover_image = models.ImageField(upload_to='verhalen_covers/', null=True, blank=True)
     datum = models.DateField()
     is_uitgelicht = models.BooleanField(default=False)
@@ -32,13 +32,14 @@ class Verhaal(models.Model):
     is_downloadable = models.BooleanField(default=False)
     word_file = models.FileField(upload_to='verhalen_pdfs/docx/', null=True, blank=True)
     pdf_file = models.FileField(upload_to='verhalen_pdfs/pdf/', null=True, blank=True)
+    url = models.CharField(max_length=200, null=True, blank=True)
 
 
     def __str__(self):
         return self.titel
 
     def convert_to_pdf(self):
-        if self.word_file:
+        if self.word_file and self.is_downloadable == True:
             # Absolute path to the docx
             docx_path = self.word_file.path
             output_dir = os.path.dirname(docx_path)
