@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/',include("verhalen.api.urls")),
     path('accounts/', include("account.urls")),
+    path('overmijpagina/', include("overmijpagina.urls")),
 ]
 
 

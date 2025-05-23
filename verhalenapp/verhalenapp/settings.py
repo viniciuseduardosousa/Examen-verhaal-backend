@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'verhalen',
     'account',
+    'overmijpagina',
 ]
 
 MIDDLEWARE = [
