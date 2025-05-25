@@ -2,6 +2,11 @@ from django.db import models
 import os
 import subprocess
 from django.core.files import File
+from django.conf import settings
+
+from PyPDF4 import PdfFileReader, PdfFileWriter
+import os
+import subprocess
 
 # class User(models.Model):
 #     naam = models.CharField(max_length=200)
@@ -40,11 +45,9 @@ class Verhaal(models.Model):
 
     def convert_to_pdf(self):
         if self.word_file and self.is_downloadable == True:
-            # Absolute path to the docx
             docx_path = self.word_file.path
             output_dir = os.path.dirname(docx_path)
-
-            # Convert with LibreOffice
+            # Convert DOCX to PDF
             subprocess.run([
                 '/opt/homebrew/bin/soffice',
                 '--headless',
@@ -53,16 +56,42 @@ class Verhaal(models.Model):
                 docx_path
             ], check=True)
 
-            # Construct expected output PDF file path
-            pdf_file = os.path.splitext(os.path.basename(docx_path))[0] + '.pdf'
-            pdf_path = os.path.join(output_dir, pdf_file)
+            # Get generated PDF path
+            pdf_file_name = os.path.splitext(os.path.basename(docx_path))[0] + '.pdf'
+            pdf_path = os.path.join(output_dir, pdf_file_name)
 
-            # Save to FileField
-            with open(pdf_path, 'rb') as f:
-                self.pdf_file.save(pdf_file, File(f), save=False)
+            # Load the watermark PDF
+            watermark_path = os.path.join(settings.MEDIA_ROOT, 'watermark.pdf')
+            if not os.path.exists(watermark_path):
+                raise FileNotFoundError("Watermark file not found.")
+
+            with open(pdf_path, 'rb') as original_pdf_file, open(watermark_path, 'rb') as watermark_file:
+                original_pdf = PdfFileReader(original_pdf_file)
+                watermark_pdf = PdfFileReader(watermark_file)
+                watermark_page = watermark_pdf.getPage(0)
+
+                output_pdf = PdfFileWriter()
+
+                # Apply watermark to each page
+                for i in range(original_pdf.getNumPages()):
+                    page = original_pdf.getPage(i)
+                    page.mergePage(watermark_page)
+                    output_pdf.addPage(page)
+
+                # Save watermarked PDF to a temporary file
+                watermarked_path = os.path.join(output_dir, f'watermarked_{pdf_file_name}')
+                with open(watermarked_path, 'wb') as f_out:
+                    output_pdf.write(f_out)
+
+            # Save watermarked PDF to FileField
+            with open(watermarked_path, 'rb') as final_pdf:
+                self.pdf_file.save(f'watermarked_{pdf_file_name}', File(final_pdf), save=False)
+
+            # Optionally delete temp files
+            os.remove(pdf_path)
+            os.remove(watermarked_path)
 
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)  # Save initial file first
-        self.convert_to_pdf()         # Convert after saving
-        super().save(update_fields=['pdf_file'])  # Save only pdf field
-
+        super().save(*args, **kwargs)  # Save original first
+        self.convert_to_pdf()         # Convert and watermark
+        super().save(update_fields=['pdf_file'])  # Save updated file

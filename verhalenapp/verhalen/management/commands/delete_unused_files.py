@@ -49,7 +49,9 @@ class Command(BaseCommand):
             if bio.afbeelding:
                 used_files.add(bio.afbeelding.name)
 
-        unused_files = all_files - used_files
+        protected_files = {'watermark.pdf',}
+
+        unused_files = (all_files - used_files) - protected_files
 
         if not unused_files:
             self.stdout.write(self.style.SUCCESS("No unused media files found."))
