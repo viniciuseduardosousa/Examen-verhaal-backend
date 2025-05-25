@@ -1,10 +1,12 @@
 import os
 from django.core.management.base import BaseCommand
 from django.conf import settings
-from verhalen.models import Verhaal  
+from verhalen.models import Verhaal
+from verhalen.models import Categorie 
+from overmijpagina.models import Overmij
 
 class Command(BaseCommand):
-    help = "Deletes unused images from verhalen_covers/ that are not referenced by Verhaal.cover_image"
+    help = "Deletes unused images from media/ that are not referenced by any models."
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -16,32 +18,44 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         dry_run = options['dry_run']
 
-   
-        covers_dir = os.path.join(settings.MEDIA_ROOT, 'verhalen_covers')
 
-        if not os.path.exists(covers_dir):
-            self.stdout.write(self.style.ERROR("verhalen_covers directory does not exist in MEDIA_ROOT."))
+        file_dir = os.path.join(settings.MEDIA_ROOT)
+
+        if not os.path.exists(file_dir):
+            self.stdout.write(self.style.ERROR("media/ directory does not exist in MEDIA_ROOT."))
             return
 
 
         all_files = set()
-        for root, dirs, files in os.walk(covers_dir):
+        for root, dirs, files in os.walk(file_dir):
             for file in files:
                 full_path = os.path.join(root, file)
                 relative_path = os.path.relpath(full_path, settings.MEDIA_ROOT)
                 all_files.add(relative_path)
 
- 
+
         used_files = set()
         for obj in Verhaal.objects.all():  
-            if obj.cover_image:             
-                used_files.add(obj.cover_image.name)
+            if obj.pdf_file:              
+                used_files.add(obj.pdf_file.name)
+        for obj1 in Verhaal.objects.all():      
+            if obj.word_file:               
+                used_files.add(obj1.word_file.name)
+        for obj2 in Verhaal.objects.all():
+            if obj.cover_image:              
+                used_files.add(obj2.cover_image.name)
+        for obj3 in Categorie.objects.all():
+            if obj.cover_image:              
+                used_files.add(obj3.cover_image.name)
+        for obj4 in Overmij.objects.all():
+            if obj.cover_image:              
+                used_files.add(obj4.afbeelding.name)
 
 
         unused_files = all_files - used_files
 
         if not unused_files:
-            self.stdout.write(self.style.SUCCESS("No unused images found in verhalen_covers/."))
+            self.stdout.write(self.style.SUCCESS("No unused images found in media/."))
             return
 
         if dry_run:
@@ -58,4 +72,4 @@ class Command(BaseCommand):
                     os.remove(full_path)
                     self.stdout.write(f"Deleted: {rel_path}")
                     deleted_count += 1
-            self.stdout.write(self.style.SUCCESS(f"Deleted {deleted_count} unused image(s) from verhalen_covers/."))
+            self.stdout.write(self.style.SUCCESS(f"Deleted {deleted_count} unused image(s) from media/."))
