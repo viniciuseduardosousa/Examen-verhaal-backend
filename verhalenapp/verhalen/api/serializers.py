@@ -5,7 +5,7 @@ class CategorieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Categorie
         fields = '__all__'
-    cover_image = serializers.ImageField(required=False)
+    cover_image = serializers.ImageField(allow_null=True, required=False)
 
 class VerhaalSerializer(serializers.ModelSerializer):
     categorie = serializers.PrimaryKeyRelatedField(queryset=Categorie.objects.all())
