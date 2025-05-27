@@ -18,6 +18,7 @@ import subprocess
 
 class Categorie(models.Model):
     naam = models.CharField(max_length=200)
+    beschrijving = models.CharField(max_length=500, null=True, blank=True)
     cover_image = models.ImageField(upload_to='categorie_covers/', null=True, blank=True)
     is_uitgelicht = models.BooleanField(default=False)
 
