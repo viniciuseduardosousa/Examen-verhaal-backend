@@ -9,3 +9,4 @@ class Overmij(models.Model):
 
 class Footer(models.Model):
     tekst = models.TextField()
+    email = models.EmailField(null=True, blank=True)
